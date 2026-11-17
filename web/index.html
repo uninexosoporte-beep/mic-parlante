@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#1f1a2e">
+  <title>Mic Parlante</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app">
+    <header class="estado">
+      <p id="salida" class="salida">Buscando salida de audio…</p>
+      <p id="estado" class="estado-texto">En espera</p>
+    </header>
+
+    <section class="centro">
+      <button id="boton" class="boton-mic" aria-pressed="false" aria-label="Activar micrófono">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2Z"/>
+        </svg>
+        <span class="anillo" aria-hidden="true"></span>
+      </button>
+      <p id="pista" class="pista">Toca para hablar</p>
+
+      <div class="medidor" aria-hidden="true"><div id="nivel" class="nivel"></div></div>
+    </section>
+
+    <section class="controles">
+      <div class="segmentado" role="radiogroup" aria-label="Modo del botón">
+        <button role="radio" aria-checked="true" data-modo="alternar">Alternar</button>
+        <button role="radio" aria-checked="false" data-modo="mantener">Mantener para hablar</button>
+      </div>
+
+      <label class="fila">
+        <span>Volumen</span>
+        <input id="volumen" type="range" min="0" max="3" step="0.05" value="1">
+        <output id="volumen-valor">100%</output>
+      </label>
+
+      <label class="fila" id="fila-salida" hidden>
+        <span>Salida</span>
+        <select id="selector-salida"></select>
+      </label>
+
+      <label class="fila interruptor">
+        <span>Baja latencia <small>(sin filtros de voz)</small></span>
+        <input id="baja-latencia" type="checkbox" role="switch">
+      </label>
+
+      <p id="latencia" class="latencia"></p>
+      <p class="aviso">Usa un parlante o audífonos Bluetooth: si sale por el altavoz del mismo celular se acopla y chilla.</p>
+    </section>
+
+    <section id="instalar" class="instalar">
+      <h2>Tenerla en tu celular</h2>
+      <a class="boton-descarga" href="MicParlante.apk" download>Descargar app Android (APK)</a>
+      <button id="boton-pwa" class="boton-secundario" hidden>Instalar desde el navegador</button>
+      <details>
+        <summary>¿Cómo se instala el APK?</summary>
+        <ol>
+          <li>Toca <b>Descargar app Android</b> y abre el archivo cuando termine.</li>
+          <li>Si Android avisa de "fuente desconocida", toca <b>Configuración → Permitir de esta fuente</b>.</li>
+          <li>Toca <b>Instalar</b>. Si aparece Play Protect, elige <b>Instalar de todas formas</b>.</li>
+          <li>Conecta tu parlante Bluetooth, abre <b>Mic Parlante</b> y acepta el permiso de micrófono.</li>
+        </ol>
+      </details>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
