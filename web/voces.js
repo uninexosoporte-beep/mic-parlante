@@ -1,43 +1,113 @@
 // Personajes: cada uno arma una cadena de efectos de audio entre el micrófono y el parlante.
 // Para agregar uno nuevo basta con sumar un objeto a VOCES con su función "armar".
 
+// grupo: 'cuento' (cuento de hadas) o 'divertida'. tono = cuánto sube/baja (para las pruebas).
 const VOCES = [
-  { id: 'normal', nombre: 'Normal', emoji: '🙂', armar: () => [] },
+  { id: 'normal', grupo: 'divertida', nombre: 'Normal', emoji: '🙂', tono: 1, armar: () => [] },
+
+  // ---------- Cuento de hadas ----------
   {
-    id: 'ardilla', nombre: 'Ardilla', emoji: '🐿️',
-    armar: (a) => [a.tono(1.75), a.filtro('highpass', 180)],
+    id: 'princesa', grupo: 'cuento', nombre: 'Princesa', emoji: '👸', tono: 1.6,
+    // Aguda, dulce y con brillo de castillo.
+    armar: (a) => [
+      a.tono(1.6, { vibrato: 5.5, profundidad: 0.02 }),
+      a.filtro('highpass', 260), a.filtro('peaking', 3200, 1, 6), a.filtro('highshelf', 7000, 0, 4),
+      a.coro(0.003, 0.5), a.sala(1.6, 0.45, 0.7),
+    ],
   },
   {
-    id: 'bebe', nombre: 'Bebé', emoji: '👶',
-    armar: (a) => [a.tono(1.4, { vibrato: 5, profundidad: 0.015 }), a.filtro('peaking', 2500, 1, 4)],
+    id: 'sirena', grupo: 'cuento', nombre: 'Sirena', emoji: '🧜‍♀️', tono: 1.45,
+    // Aguda y ondulante, como cantando bajo el mar.
+    armar: (a) => [
+      a.tono(1.45, { vibrato: 3, profundidad: 0.035 }),
+      a.filtro('highpass', 220), a.coro(0.007, 0.8), a.eco(0.18, 0.4, 0.4), a.sala(2.2, 0.5, 0.35),
+    ],
   },
   {
-    id: 'robot', nombre: 'Robot', emoji: '🤖',
-    armar: (a) => [a.tono(0.92), a.anillo(55), a.peine(0.011, 0.55), a.filtro('highpass', 120)],
+    id: 'reina-hielo', grupo: 'cuento', nombre: 'Reina de hielo', emoji: '❄️', tono: 1.35,
+    // Elegante y fría, con eco largo de palacio de hielo.
+    armar: (a) => [
+      a.tono(1.35), a.filtro('highpass', 300), a.filtro('highshelf', 5000, 0, 8),
+      a.eco(0.32, 0.45, 0.45), a.sala(3, 0.6, 0.9),
+    ],
   },
   {
-    id: 'monstruo', nombre: 'Monstruo', emoji: '👹',
-    armar: (a) => [a.tono(0.6), a.distorsion(6), a.filtro('lowshelf', 220, 0, 7), a.filtro('lowpass', 3200)],
+    id: 'hada', grupo: 'cuento', nombre: 'Hada madrina', emoji: '🧚', tono: 1.3,
+    // Cálida, temblorosa y mágica.
+    armar: (a) => [
+      a.tono(1.3, { vibrato: 7, profundidad: 0.03 }), a.tremolo(7, 0.2),
+      a.filtro('peaking', 2500, 1, 4), a.coro(0.004, 0.7), a.sala(1.8, 0.5, 0.8),
+    ],
   },
   {
-    id: 'alien', nombre: 'Alien', emoji: '👽',
-    armar: (a) => [a.tono(1.22, { vibrato: 9, profundidad: 0.06 }), a.anillo(320, 0.5)],
+    id: 'principe', grupo: 'cuento', nombre: 'Príncipe', emoji: '🤴', tono: 0.78,
+    // Grave, galán y heroico, en un gran salón.
+    armar: (a) => [
+      a.tono(0.78), a.filtro('lowshelf', 200, 0, 6), a.filtro('peaking', 2800, 1, 3),
+      a.coro(0.002, 0.3), a.sala(2, 0.4, 0.5),
+    ],
   },
   {
-    id: 'fantasma', nombre: 'Fantasma', emoji: '👻',
-    armar: (a) => [a.tono(0.85, { vibrato: 3, profundidad: 0.03 }), a.eco(0.28, 0.5, 0.6), a.filtro('lowpass', 2600)],
+    id: 'bruja', grupo: 'cuento', nombre: 'Bruja malvada', emoji: '🧙‍♀️', tono: 1.2,
+    // Chillona, rasposa y temblorosa.
+    armar: (a) => [
+      a.tono(1.2, { vibrato: 8, profundidad: 0.06 }), a.distorsion(4),
+      a.filtro('bandpass', 1800, 0.8), a.anillo(90, 0.25), a.sala(1.4, 0.35, 0.4),
+    ],
   },
   {
-    id: 'abuelito', nombre: 'Abuelito', emoji: '👴',
-    armar: (a) => [a.tono(0.84, { vibrato: 6.5, profundidad: 0.025 }), a.tremolo(6.5, 0.25), a.filtro('highpass', 160)],
+    id: 'dragon', grupo: 'cuento', nombre: 'Dragón', emoji: '🐉', tono: 0.5,
+    // Gigante, rugiente, desde una cueva.
+    armar: (a) => [
+      a.tono(0.5), a.distorsion(9), a.filtro('lowshelf', 180, 0, 9), a.filtro('lowpass', 2800),
+      a.eco(0.12, 0.35, 0.4), a.sala(2.5, 0.5, 0.25),
+    ],
   },
   {
-    id: 'gigante', nombre: 'Gigante', emoji: '🦖',
-    armar: (a) => [a.tono(0.7), a.eco(0.09, 0.35, 0.45), a.filtro('lowshelf', 180, 0, 6)],
+    id: 'sapo', grupo: 'cuento', nombre: 'Sapo encantado', emoji: '🐸', tono: 0.7,
+    // Príncipe convertido en sapo: grave y croante.
+    armar: (a) => [a.tono(0.7), a.anillo(28, 0.6), a.filtro('peaking', 900, 2, 8), a.distorsion(3)],
+  },
+
+  // ---------- Divertidas ----------
+  {
+    id: 'ardilla', grupo: 'divertida', nombre: 'Ardilla', emoji: '🐿️', tono: 2.1,
+    armar: (a) => [a.tono(2.1), a.filtro('highpass', 250)],
   },
   {
-    id: 'radio', nombre: 'Radio', emoji: '📻',
-    armar: (a) => [a.filtro('bandpass', 1600, 1.1), a.distorsion(3), a.filtro('highpass', 400)],
+    id: 'bebe', grupo: 'divertida', nombre: 'Bebé', emoji: '👶', tono: 1.7,
+    armar: (a) => [a.tono(1.7, { vibrato: 6, profundidad: 0.03 }), a.filtro('peaking', 2500, 1, 6), a.filtro('highpass', 300)],
+  },
+  {
+    id: 'robot', grupo: 'divertida', nombre: 'Robot', emoji: '🤖', tono: 0.9,
+    armar: (a) => [a.tono(0.9), a.anillo(50), a.peine(0.009, 0.75), a.distorsion(3), a.filtro('highpass', 150)],
+  },
+  {
+    id: 'monstruo', grupo: 'divertida', nombre: 'Monstruo', emoji: '👹', tono: 0.5,
+    armar: (a) => [a.tono(0.5), a.distorsion(10), a.filtro('lowshelf', 220, 0, 9), a.filtro('lowpass', 3000)],
+  },
+  {
+    id: 'alien', grupo: 'divertida', nombre: 'Alien', emoji: '👽', tono: 1.3,
+    armar: (a) => [a.tono(1.3, { vibrato: 11, profundidad: 0.1 }), a.anillo(360, 0.65), a.eco(0.07, 0.4, 0.4)],
+  },
+  {
+    id: 'fantasma', grupo: 'divertida', nombre: 'Fantasma', emoji: '👻', tono: 0.75,
+    armar: (a) => [
+      a.tono(0.75, { vibrato: 2.5, profundidad: 0.05 }), a.eco(0.3, 0.65, 0.8),
+      a.filtro('lowpass', 2400), a.sala(3, 0.6, 0.3),
+    ],
+  },
+  {
+    id: 'abuelito', grupo: 'divertida', nombre: 'Abuelito', emoji: '👴', tono: 0.8,
+    armar: (a) => [a.tono(0.8, { vibrato: 6.5, profundidad: 0.045 }), a.tremolo(6.5, 0.45), a.filtro('highpass', 200)],
+  },
+  {
+    id: 'gigante', grupo: 'divertida', nombre: 'Gigante', emoji: '🦖', tono: 0.55,
+    armar: (a) => [a.tono(0.55), a.eco(0.1, 0.45, 0.55), a.filtro('lowshelf', 180, 0, 8), a.sala(2, 0.4, 0.3)],
+  },
+  {
+    id: 'radio', grupo: 'divertida', nombre: 'Radio', emoji: '📻', tono: 1,
+    armar: (a) => [a.filtro('bandpass', 1700, 1.6), a.distorsion(6), a.filtro('highpass', 500)],
   },
 ];
 
@@ -145,6 +215,51 @@ function crearVoz(ctx, id, ventanaMs = 40) {
       return { entrada: w, salida: bajar };
     },
 
+    // Coro: dos copias con retardo que ondula, suena "soñado" o a varias voces juntas.
+    coro(profundidad = 0.004, mezcla = 0.6) {
+      const entrada = ctx.createGain();
+      const salida = ctx.createGain();
+      entrada.connect(salida);
+      [[0.018, 0.8], [0.027, 1.3]].forEach(([base, velocidad]) => {
+        const r = ctx.createDelay(0.1);
+        r.delayTime.value = base;
+        const cuanto = ctx.createGain();
+        cuanto.gain.value = profundidad;
+        oscilador(velocidad).connect(cuanto).connect(r.delayTime);
+        const nivel = ctx.createGain();
+        nivel.gain.value = mezcla;
+        entrada.connect(r).connect(nivel).connect(salida);
+      });
+      const bajar = ctx.createGain();
+      bajar.gain.value = 1 / (1 + mezcla);
+      salida.connect(bajar);
+      return { entrada, salida: bajar };
+    },
+
+    // Sala: reverberación real (castillo, cueva…). segundos = cuánto dura la cola.
+    sala(segundos, mezcla, brillo = 0.5) {
+      const entrada = ctx.createGain();
+      const salida = ctx.createGain();
+      const largo = Math.round(ctx.sampleRate * segundos);
+      const impulso = ctx.createBuffer(2, largo, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const d = impulso.getChannelData(c);
+        let previo = 0;
+        for (let i = 0; i < largo; i++) {
+          const ruido = Math.random() * 2 - 1;
+          previo = brillo * ruido + (1 - brillo) * previo; // menos brillo = cola más oscura
+          d[i] = previo * (1 - i / largo) ** 2.5;
+        }
+      }
+      const conv = ctx.createConvolver();
+      conv.buffer = impulso;
+      const nivel = ctx.createGain();
+      nivel.gain.value = mezcla;
+      entrada.connect(salida);
+      entrada.connect(conv).connect(nivel).connect(salida);
+      return { entrada, salida };
+    },
+
     // Volumen que tiembla (voz temblorosa).
     tremolo(frecuencia, profundidad) {
       const g = ctx.createGain();
@@ -163,8 +278,15 @@ function crearVoz(ctx, id, ventanaMs = 40) {
     ultimo.connect(b.entrada);
     ultimo = b.salida;
   }
+  // Limitador final: las voces exageradas (eco, sala, distorsión) no saturan el parlante.
+  const limitador = ctx.createDynamicsCompressor();
+  limitador.threshold.value = -8;
+  limitador.knee.value = 4;
+  limitador.ratio.value = 12;
+  limitador.attack.value = 0.003;
+  limitador.release.value = 0.15;
   const salida = ctx.createGain();
-  ultimo.connect(salida);
+  ultimo.connect(limitador).connect(salida);
 
   return {
     entrada,

@@ -125,7 +125,21 @@ function elegirVoz(id) {
 }
 
 function pintarVoces() {
-  ui.voces.replaceChildren(...VOCES.map((v) => {
+  const grupos = [['cuento', '✨ Cuento de hadas'], ['divertida', '🎉 Divertidas']];
+  ui.voces.replaceChildren(...grupos.map(([grupo, titulo]) => {
+    const h = document.createElement('h3');
+    h.textContent = titulo;
+    const rejilla = document.createElement('div');
+    rejilla.className = 'voces-rejilla';
+    rejilla.append(...botonesDeVoz(VOCES.filter((v) => v.grupo === grupo)));
+    const caja = document.createElement('div');
+    caja.append(h, rejilla);
+    return caja;
+  }));
+}
+
+function botonesDeVoz(lista) {
+  return lista.map((v) => {
     const b = document.createElement('button');
     b.type = 'button';
     b.setAttribute('role', 'radio');
@@ -139,7 +153,7 @@ function pintarVoces() {
     b.append(emoji, nombre);
     b.addEventListener('click', () => elegirVoz(v.id));
     return b;
-  }));
+  });
 }
 
 function fijarGanancia(valor) {
