@@ -150,11 +150,14 @@ body {
 
 .personajes h2 { margin: 0 0 10px; font-size: 1rem; text-align: center; }
 .personajes h2 small { color: var(--suave); font-weight: 400; }
-.voces {
+.voces { display: grid; gap: 12px; }
+.voces h3 { margin: 0 0 6px; font-size: .85rem; color: var(--suave); font-weight: 700; }
+.voces-rejilla {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
+.voces button span:last-child { line-height: 1.15; text-align: center; }
 .voces button {
   display: flex;
   flex-direction: column;
