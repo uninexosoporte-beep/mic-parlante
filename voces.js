@@ -7,11 +7,11 @@ const VOCES = [
 
   // ---------- Cuento de hadas ----------
   {
-    id: 'princesa', grupo: 'cuento', nombre: 'Princesa', emoji: '👸', objetivoHz: 360,
-    // Voz natural de alta calidad: lleva cualquier voz a ~360 Hz respetando la entonación,
-    // con garganta un 20 % más pequeña, un poco de "aire" y sala suave de castillo.
+    id: 'princesa', grupo: 'cuento', nombre: 'Princesa', emoji: '👸', objetivoHz: 440,
+    // Voz natural de alta calidad: lleva cualquier voz a ~440 Hz respetando la entonación,
+    // con garganta un 24 % más pequeña, un poco de "aire" y sala suave de castillo.
     armar: (a) => [
-      a.natural({ objetivoHz: 360, formante: 1.2 }),
+      a.natural({ objetivoHz: 440, formante: 1.24 }),
       a.filtro('highpass', 160), a.filtro('peaking', 300, 1, -2),
       a.filtro('peaking', 3000, 0.9, 2), a.filtro('highshelf', 8500, 0, 4),
       a.sala(1.1, 0.16, 0.75), a.nivel(1.9),
@@ -82,6 +82,16 @@ const VOCES = [
   },
 
   // ---------- Divertidas ----------
+  {
+    id: 'pato', grupo: 'divertida', nombre: 'Pato', emoji: '🦆', objetivoHz: 420,
+    // Pato de caricatura: aguda, muy nasal, rasposa y con aleteo (graznido).
+    armar: (a) => [
+      a.natural({ objetivoHz: 420, formante: 1.38 }),
+      a.filtro('highpass', 550), a.filtro('peaking', 1450, 3.5, 12), a.filtro('peaking', 2900, 2, 5),
+      a.filtro('lowpass', 4800), a.distorsion(5),
+      a.anillo(38, 0.35), a.tremolo(24, 0.3), a.nivel(1.5),
+    ],
+  },
   {
     id: 'ardilla', grupo: 'divertida', nombre: 'Ardilla', emoji: '🐿️', tono: 2.1,
     armar: (a) => [a.tono(2.1), a.filtro('highpass', 250)],
