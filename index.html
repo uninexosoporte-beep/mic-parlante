@@ -39,6 +39,11 @@
       <div class="medidor" aria-hidden="true"><div id="nivel" class="nivel"></div></div>
     </section>
 
+    <section class="personajes">
+      <h2>Voz del personaje <small>(cámbiala en vivo)</small></h2>
+      <div id="voces" class="voces" role="radiogroup" aria-label="Voz del personaje"></div>
+    </section>
+
     <section class="controles">
       <div class="segmentado" role="radiogroup" aria-label="Modo del botón">
         <button role="radio" aria-checked="true" data-modo="alternar">Alternar</button>
@@ -81,6 +86,7 @@
     </section>
   </main>
 
+  <script src="voces.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

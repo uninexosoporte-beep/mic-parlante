@@ -18,6 +18,7 @@ const ui = {
   botonBt: $('boton-bt'),
   textoBt: $('texto-bt'),
   guiaBt: $('guia-bt'),
+  voces: $('voces'),
 };
 
 // Dentro de la app Android existe el puente "Android" (pantalla encendida, salida de audio).
@@ -32,6 +33,9 @@ const estado = {
   flujo: null,
   ganancia: null,
   analizador: null,
+  fuente: null,         // micrófono dentro del audio
+  efecto: null,         // cadena del personaje actual
+  voz: 'normal',
   bloqueoPantalla: null,
   abriendo: null,       // promesa mientras se abre el micrófono
   idSalida: 'default',
@@ -67,14 +71,17 @@ async function crearAudio() {
   });
 
   const ctx = new AudioContext({ latencyHint: bajaLatencia ? 'interactive' : 'playback' });
+  await ctx.audioWorklet.addModule('voces-worklet.js');
   const fuente = ctx.createMediaStreamSource(estado.flujo);
   const ganancia = ctx.createGain();
   ganancia.gain.value = 0;
   const analizador = ctx.createAnalyser();
   analizador.fftSize = 512;
 
-  fuente.connect(ganancia).connect(analizador).connect(ctx.destination);
-  Object.assign(estado, { ctx, ganancia, analizador });
+  // micrófono → [personaje] → ganancia (encender/callar) → medidor → parlante
+  ganancia.connect(analizador).connect(ctx.destination);
+  Object.assign(estado, { ctx, ganancia, analizador, fuente });
+  conectarVoz();
 
   if (estado.idSalida !== 'default' && ctx.setSinkId) {
     try { await ctx.setSinkId(estado.idSalida); } catch { estado.idSalida = 'default'; }
@@ -88,8 +95,51 @@ async function cerrarAudio() {
   await estado.abriendo?.catch(() => {});
   estado.flujo?.getTracks().forEach((t) => t.stop());
   await estado.ctx?.close().catch(() => {});
-  Object.assign(estado, { ctx: null, flujo: null, ganancia: null, analizador: null });
+  Object.assign(estado, { ctx: null, flujo: null, ganancia: null, analizador: null, fuente: null, efecto: null });
   ui.latencia.textContent = '';
+}
+
+// ---------- Personajes ----------
+// Cambia la cadena de efectos en vivo, sin cortar el micrófono.
+function conectarVoz() {
+  const { ctx, fuente, ganancia } = estado;
+  if (!ctx) return;
+  const anterior = estado.efecto;
+  if (anterior) {
+    fuente.disconnect();
+    anterior.detener();
+  }
+  const ventanaMs = ui.bajaLatencia.checked ? 25 : 40;
+  estado.efecto = crearVoz(ctx, estado.voz, ventanaMs);
+  fuente.connect(estado.efecto.entrada);
+  estado.efecto.salida.connect(ganancia);
+}
+
+function elegirVoz(id) {
+  estado.voz = VOCES.some((v) => v.id === id) ? id : 'normal';
+  guardarPref('voz', estado.voz);
+  ui.voces.querySelectorAll('button').forEach((b) => {
+    b.setAttribute('aria-checked', String(b.dataset.voz === estado.voz));
+  });
+  conectarVoz();
+}
+
+function pintarVoces() {
+  ui.voces.replaceChildren(...VOCES.map((v) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role', 'radio');
+    b.dataset.voz = v.id;
+    const emoji = document.createElement('span');
+    emoji.className = 'emoji';
+    emoji.setAttribute('aria-hidden', 'true');
+    emoji.textContent = v.emoji;
+    const nombre = document.createElement('span');
+    nombre.textContent = v.nombre;
+    b.append(emoji, nombre);
+    b.addEventListener('click', () => elegirVoz(v.id));
+    return b;
+  }));
 }
 
 function fijarGanancia(valor) {
@@ -323,6 +373,8 @@ document.addEventListener('visibilitychange', () => {
 ui.volumen.value = leerPref('volumen', '1');
 ui.volumenValor.textContent = `${Math.round(ui.volumen.value * 100)}%`;
 ui.bajaLatencia.checked = leerPref('bajaLatencia', '0') === '1';
+pintarVoces();
+elegirVoz(leerPref('voz', 'normal'));
 estado.idSalida = leerPref('salida', 'default');
 fijarModo(leerPref('modo', 'alternar'));
 
