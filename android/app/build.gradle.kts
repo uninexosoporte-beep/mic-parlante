@@ -11,8 +11,8 @@ android {
         applicationId = "com.micparlante.app"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.1.0"
     }
 
     // La interfaz es la misma web de ../../web: se empaqueta dentro del APK.

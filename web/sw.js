@@ -1,6 +1,6 @@
 // Primero la red, y la copia guardada solo si no hay conexión.
-const CACHE = 'mic-parlante-v3';
-const ARCHIVOS = ['./', 'index.html', 'styles.css', 'app.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'mic-parlante-v4';
+const ARCHIVOS = ['./', 'index.html', 'styles.css', 'app.js', 'voces.js', 'voces-worklet.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ARCHIVOS)));

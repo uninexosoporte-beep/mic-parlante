@@ -56,7 +56,7 @@ body {
 
 .boton-mic {
   position: relative;
-  width: min(62vw, 240px);
+  width: min(52vw, 210px);
   aspect-ratio: 1;
   border: 0;
   border-radius: 28px;
@@ -147,6 +147,33 @@ body {
   color: var(--texto);
 }
 .interruptor input { width: 22px; height: 22px; accent-color: var(--rojo); }
+
+.personajes h2 { margin: 0 0 10px; font-size: 1rem; text-align: center; }
+.personajes h2 small { color: var(--suave); font-weight: 400; }
+.voces {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.voces button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 2px;
+  min-width: 0;
+  border: 2px solid var(--borde);
+  border-radius: 14px;
+  background: var(--panel);
+  color: var(--texto);
+  font: inherit;
+  font-size: .75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.voces .emoji { font-size: 1.6rem; line-height: 1.1; }
+.voces button[aria-checked="true"] { border-color: var(--rojo); background: var(--acento); }
+.voces button:focus-visible { outline: 3px solid var(--texto); outline-offset: 2px; }
 
 .boton-bt {
   display: inline-flex;
