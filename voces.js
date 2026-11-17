@@ -17,58 +17,68 @@ const VOCES = [
       a.sala(1.1, 0.16, 0.75), a.nivel(1.9),
     ],
   },
+  // Todas usan el motor natural: objetivoHz = tono promedio al que llega cualquier voz,
+  // formante = tamaño de la garganta (>1 más pequeña/joven, <1 más grande).
   {
-    id: 'sirena', grupo: 'cuento', nombre: 'Sirena', emoji: '🧜‍♀️', tono: 1.45,
-    // Aguda y ondulante, como cantando bajo el mar.
+    id: 'sirena', grupo: 'cuento', nombre: 'Sirena', emoji: '🧜‍♀️', objetivoHz: 330,
+    // Joven y luminosa, con un brillo ondulante de agua.
     armar: (a) => [
-      a.tono(1.45, { vibrato: 3, profundidad: 0.035 }),
-      a.filtro('highpass', 220), a.coro(0.007, 0.8), a.eco(0.18, 0.4, 0.4), a.sala(2.2, 0.5, 0.35),
+      a.natural({ objetivoHz: 330, formante: 1.18 }),
+      a.filtro('highpass', 160), a.filtro('highshelf', 7500, 0, 3),
+      a.coro(0.004, 0.45), a.eco(0.18, 0.3, 0.22), a.sala(1.8, 0.28, 0.5), a.nivel(1.8),
     ],
   },
   {
-    id: 'reina-hielo', grupo: 'cuento', nombre: 'Reina de hielo', emoji: '❄️', tono: 1.35,
-    // Elegante y fría, con eco largo de palacio de hielo.
+    id: 'reina-hielo', grupo: 'cuento', nombre: 'Reina de hielo', emoji: '❄️', objetivoHz: 290,
+    // Adulta, elegante y fría, con eco de palacio de hielo.
     armar: (a) => [
-      a.tono(1.35), a.filtro('highpass', 300), a.filtro('highshelf', 5000, 0, 8),
-      a.eco(0.32, 0.45, 0.45), a.sala(3, 0.6, 0.9),
+      a.natural({ objetivoHz: 290, formante: 1.14 }),
+      a.filtro('highpass', 170), a.filtro('highshelf', 6000, 0, 5),
+      a.eco(0.32, 0.35, 0.28), a.sala(2.4, 0.33, 0.9), a.nivel(1.8),
     ],
   },
   {
-    id: 'hada', grupo: 'cuento', nombre: 'Hada madrina', emoji: '🧚', tono: 1.3,
-    // Cálida, temblorosa y mágica.
+    id: 'hada', grupo: 'cuento', nombre: 'Hada madrina', emoji: '🧚', objetivoHz: 300,
+    // Cálida, mágica y con un leve temblor de abuelita bondadosa.
     armar: (a) => [
-      a.tono(1.3, { vibrato: 7, profundidad: 0.03 }), a.tremolo(7, 0.2),
-      a.filtro('peaking', 2500, 1, 4), a.coro(0.004, 0.7), a.sala(1.8, 0.5, 0.8),
+      a.natural({ objetivoHz: 300, formante: 1.12 }), a.tremolo(6, 0.12),
+      a.filtro('peaking', 2500, 1, 2), a.coro(0.003, 0.35), a.sala(1.5, 0.28, 0.8), a.nivel(1.8),
     ],
   },
   {
-    id: 'principe', grupo: 'cuento', nombre: 'Príncipe', emoji: '🤴', tono: 0.78,
+    id: 'principe', grupo: 'cuento', nombre: 'Príncipe', emoji: '🤴', objetivoHz: 110,
     // Grave, galán y heroico, en un gran salón.
     armar: (a) => [
-      a.tono(0.78), a.filtro('lowshelf', 200, 0, 6), a.filtro('peaking', 2800, 1, 3),
-      a.coro(0.002, 0.3), a.sala(2, 0.4, 0.5),
+      a.natural({ objetivoHz: 110, formante: 0.9 }),
+      a.filtro('lowshelf', 200, 0, 4), a.filtro('peaking', 2800, 1, 2),
+      a.sala(1.4, 0.2, 0.5), a.nivel(1.6),
     ],
   },
   {
-    id: 'bruja', grupo: 'cuento', nombre: 'Bruja malvada', emoji: '🧙‍♀️', tono: 1.2,
-    // Chillona, rasposa y temblorosa.
+    id: 'bruja', grupo: 'cuento', nombre: 'Bruja malvada', emoji: '🧙‍♀️', objetivoHz: 280,
+    // Chillona, nasal, rasposa y temblorosa.
     armar: (a) => [
-      a.tono(1.2, { vibrato: 8, profundidad: 0.06 }), a.distorsion(4),
-      a.filtro('bandpass', 1800, 0.8), a.anillo(90, 0.25), a.sala(1.4, 0.35, 0.4),
+      a.natural({ objetivoHz: 280, formante: 1.1 }), a.tremolo(7, 0.3),
+      a.filtro('peaking', 1500, 2, 7), a.distorsion(3), a.anillo(90, 0.15),
+      a.sala(1.2, 0.25, 0.4), a.nivel(1.6),
     ],
   },
   {
-    id: 'dragon', grupo: 'cuento', nombre: 'Dragón', emoji: '🐉', tono: 0.5,
-    // Gigante, rugiente, desde una cueva.
+    id: 'dragon', grupo: 'cuento', nombre: 'Dragón', emoji: '🐉', objetivoHz: 65,
+    // Enorme y rugiente, desde una cueva.
     armar: (a) => [
-      a.tono(0.5), a.distorsion(9), a.filtro('lowshelf', 180, 0, 9), a.filtro('lowpass', 2800),
-      a.eco(0.12, 0.35, 0.4), a.sala(2.5, 0.5, 0.25),
+      a.natural({ objetivoHz: 65, formante: 0.72 }), a.distorsion(7),
+      a.filtro('lowshelf', 180, 0, 7), a.filtro('lowpass', 3000),
+      a.eco(0.12, 0.3, 0.3), a.sala(2.2, 0.4, 0.25), a.nivel(1.4),
     ],
   },
   {
-    id: 'sapo', grupo: 'cuento', nombre: 'Sapo encantado', emoji: '🐸', tono: 0.7,
+    id: 'sapo', grupo: 'cuento', nombre: 'Sapo encantado', emoji: '🐸', objetivoHz: 85,
     // Príncipe convertido en sapo: grave y croante.
-    armar: (a) => [a.tono(0.7), a.anillo(28, 0.6), a.filtro('peaking', 900, 2, 8), a.distorsion(3)],
+    armar: (a) => [
+      a.natural({ objetivoHz: 85, formante: 0.82 }), a.anillo(28, 0.5),
+      a.filtro('peaking', 900, 2, 6), a.distorsion(3), a.nivel(1.4),
+    ],
   },
 
   // ---------- Divertidas ----------

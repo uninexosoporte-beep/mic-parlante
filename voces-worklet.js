@@ -205,7 +205,7 @@ class VozNatural extends AudioWorkletProcessor {
       let beta = 1;
       if (marca.sonora) {
         beta = this.objetivo && this.f0medio ? this.objetivo / this.f0medio : this.factorFijo;
-        beta = Math.max(0.67, Math.min(3.2, beta));
+        beta = Math.max(0.5, Math.min(3.2, beta)); // hasta una octava abajo (dragón) o ×3.2 arriba
       }
       const paso = T / beta;
       const alfa = this.alfa;
