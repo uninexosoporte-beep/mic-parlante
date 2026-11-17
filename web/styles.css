@@ -148,6 +148,37 @@ body {
 }
 .interruptor input { width: 22px; height: 22px; accent-color: var(--rojo); }
 
+.boton-bt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: #1f6fe5;
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.boton-bt svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.boton-bt.conectado { background: transparent; color: var(--texto); border: 1px solid var(--borde); font-weight: 600; }
+.boton-bt:focus-visible { outline: 3px solid var(--texto); outline-offset: 3px; }
+.guia-bt {
+  margin: 12px auto 0;
+  max-width: 360px;
+  padding: 12px 14px 12px 32px;
+  text-align: left;
+  font-size: .9rem;
+  color: var(--suave);
+  background: var(--panel);
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  display: grid;
+  gap: 6px;
+}
+
 .instalar {
   display: flex;
   flex-direction: column;

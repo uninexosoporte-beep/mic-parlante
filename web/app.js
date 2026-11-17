@@ -15,6 +15,9 @@ const ui = {
   filaSalida: $('fila-salida'),
   selectorSalida: $('selector-salida'),
   modos: document.querySelectorAll('.segmentado button'),
+  botonBt: $('boton-bt'),
+  textoBt: $('texto-bt'),
+  guiaBt: $('guia-bt'),
 };
 
 // Dentro de la app Android existe el puente "Android" (pantalla encendida, salida de audio).
@@ -189,6 +192,7 @@ async function revisarSalidas() {
     ui.salida.textContent = bt ? `Saliendo por: ${bt}` : 'No se detecta Bluetooth: conecta un parlante primero';
     ui.salida.classList.toggle('ok', Boolean(bt));
     ui.filaSalida.hidden = true;
+    marcarBotonBt();
     return;
   }
   if (!navigator.mediaDevices?.enumerateDevices) return;
@@ -223,7 +227,26 @@ async function revisarSalidas() {
       return op;
     }));
   }
+  marcarBotonBt();
 }
+
+// ---------- Botón Bluetooth ----------
+// Ninguna app común puede conectar un parlante por su cuenta (lo reserva Android):
+// en la app se abre la pantalla de Bluetooth del sistema; en la web se muestra una guía.
+function marcarBotonBt() {
+  const conectado = ui.salida.classList.contains('ok');
+  ui.botonBt.classList.toggle('conectado', conectado);
+  ui.textoBt.textContent = conectado ? 'Cambiar parlante' : 'Conectar parlante Bluetooth';
+  if (conectado) ui.guiaBt.hidden = true;
+}
+
+ui.botonBt.addEventListener('click', () => {
+  if (enApp) {
+    window.Android.abrirBluetooth();
+  } else {
+    ui.guiaBt.hidden = !ui.guiaBt.hidden;
+  }
+});
 
 // ---------- Eventos ----------
 ui.boton.addEventListener('click', () => {

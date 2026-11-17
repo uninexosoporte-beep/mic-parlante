@@ -3,11 +3,14 @@ package com.micparlante.app
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.os.Bundle
+import android.provider.Settings
 import android.view.WindowManager
 import android.webkit.JavascriptInterface
 import android.webkit.PermissionRequest
@@ -100,6 +103,16 @@ class MainActivity : Activity() {
         fun pantallaEncendida(encendida: Boolean) = runOnUiThread {
             if (encendida) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+
+        /** Abre la pantalla de Bluetooth del sistema; al volver, onResume avisa a la página. */
+        @JavascriptInterface
+        fun abrirBluetooth() = runOnUiThread {
+            try {
+                startActivity(Intent(Settings.ACTION_BLUETOOTH_SETTINGS))
+            } catch (e: ActivityNotFoundException) {
+                startActivity(Intent(Settings.ACTION_SETTINGS))
+            }
         }
 
         /** Nombre del parlante/audífono Bluetooth conectado, o "" si no hay. */
