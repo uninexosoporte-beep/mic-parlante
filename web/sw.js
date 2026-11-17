@@ -1,5 +1,5 @@
 // Primero la red, y la copia guardada solo si no hay conexión.
-const CACHE = 'mic-parlante-v7';
+const CACHE = 'mic-parlante-v8';
 const ARCHIVOS = ['./', 'index.html', 'styles.css', 'app.js', 'voces.js', 'voces-worklet.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
 
 self.addEventListener('install', (e) => {
