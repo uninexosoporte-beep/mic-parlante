@@ -7,12 +7,14 @@ const VOCES = [
 
   // ---------- Cuento de hadas ----------
   {
-    id: 'princesa', grupo: 'cuento', nombre: 'Princesa', emoji: '👸', tono: 1.6,
-    // Aguda, dulce y con brillo de castillo.
+    id: 'princesa', grupo: 'cuento', nombre: 'Princesa', emoji: '👸', objetivoHz: 360,
+    // Voz natural de alta calidad: lleva cualquier voz a ~360 Hz respetando la entonación,
+    // con garganta un 20 % más pequeña, un poco de "aire" y sala suave de castillo.
     armar: (a) => [
-      a.tono(1.6, { vibrato: 5.5, profundidad: 0.02 }),
-      a.filtro('highpass', 260), a.filtro('peaking', 3200, 1, 6), a.filtro('highshelf', 7000, 0, 4),
-      a.coro(0.003, 0.5), a.sala(1.6, 0.45, 0.7),
+      a.natural({ objetivoHz: 360, formante: 1.2 }),
+      a.filtro('highpass', 160), a.filtro('peaking', 300, 1, -2),
+      a.filtro('peaking', 3000, 0.9, 2), a.filtro('highshelf', 8500, 0, 4),
+      a.sala(1.1, 0.16, 0.75), a.nivel(1.9),
     ],
   },
   {
@@ -142,6 +144,22 @@ function crearVoz(ctx, id, ventanaMs = 40) {
         lfo.connect(cuanto).connect(n.parameters.get('factor'));
       }
       return { entrada: n, salida: n };
+    },
+
+    // Cambio de tono natural (conserva la forma de la voz). Ver VozNatural en voces-worklet.js.
+    natural({ objetivoHz = 0, factor = 1, formante = 1 }) {
+      const n = new AudioWorkletNode(ctx, 'voz-natural', {
+        outputChannelCount: [1],
+        processorOptions: { objetivoHz, factor, formante },
+      });
+      return { entrada: n, salida: n };
+    },
+
+    // Compensa el volumen de una voz (el limitador final evita que sature).
+    nivel(veces) {
+      const g = ctx.createGain();
+      g.gain.value = veces;
+      return { entrada: g, salida: g };
     },
 
     filtro(tipo, frecuencia, q = 0.7, ganancia = 0) {
